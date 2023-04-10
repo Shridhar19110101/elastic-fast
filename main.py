@@ -13,7 +13,7 @@ from selenium.webdriver.chrome.options import Options
 
 
 
-application = FastAPI()
+app = FastAPI()
 
 async def pipeline(domain):
     # chat_providers=[("js.driftt.com/","drift"),(".intercom.io/messenger/web/","intercom"),(".livechatinc.com/","LiveChat"),(".salesforceliveagent.com//chat/","Salesforce"),(".hubspot.com/livechat","hubspot"),(".hubspot.com/conversations-visitor/","hubspot"),
@@ -60,17 +60,17 @@ async def pipeline(domain):
     # return "no",""
     return "succesful request"
 
-@application.get("/")
+@app.get("/")
 async def main(domain: str):
     return await pipeline(domain)
 
 
-@application.post("/")
+@app.post("/")
 async def root(domain: str):
     return await main(domain)
 
-if __name__=='__main__':
-    uvicorn.run("application:application", host="0.0.0.0", port=80, workers=4)
+# if __name__=='__main__':
+#     uvicorn.run("application:app")
 
    # to run the app(deploy), run python main.py
    # do not forget to add inbound rule from all traffic in ec2
