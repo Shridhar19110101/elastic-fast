@@ -10,11 +10,7 @@ import uvicorn
 
 from selenium.webdriver.chrome.options import Options
 
-# chrome_options = Options()
-# chrome_options.add_argument('--no-sandbox')
-# chrome_options.add_argument('--headless')
-# chrome_options.add_argument('--disable-dev-shm-usage')
-# driver = webdriver.Chrome(service=Service('/usr/bin/chromedriver'),options=chrome_options)
+
 
 
 app = FastAPI()
@@ -27,8 +23,12 @@ async def pipeline(domain):
     url=f"https://www.{domain}"
     desired_capabilities = DesiredCapabilities.CHROME
     desired_capabilities["goog:loggingPrefs"] = {"performance": "ALL"}
-    
-    driver =webdriver.Chrome(service=Service(ChromeDriverManager().install()),desired_capabilities=desired_capabilities)
+    chrome_options = Options()
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--headless')
+    chrome_options.add_argument('--disable-dev-shm-usage')
+    # driver = webdriver.Chrome(service=Service('/usr/bin/chromedriver'),options=chrome_options)
+    driver =webdriver.Chrome(service=Service(ChromeDriverManager().install()),options=chrome_options,desired_capabilities=desired_capabilities)
     
     try:
         driver.get(url)
@@ -70,8 +70,8 @@ app = FastAPI()
 async def root(domain: str):
     return await main(domain)
 
-if __name__=='__main__':
-    uvicorn.run("main:app", host="0.0.0.0", port=80, workers=4)
+# if __name__=='__main__':
+#     uvicorn.run("main:app", host="0.0.0.0", port=80, workers=4)
 
    # to run the app(deploy), run python main.py
    # do not forget to add inbound rule from all traffic in ec2
